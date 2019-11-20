@@ -129,7 +129,7 @@ def get(accessToken = '', peerId = '', downloadPhotos = False, downloadVideos = 
                             photo_url = max(photo, key=lambda x:x['width'])['url']
                             date = item['attachment']['photo']['date']
                             value = datetime.fromtimestamp(date)
-                            str_date = value.strftime('%Y-%m-%d_%H:%M:%S')
+                            str_date = value.strftime('%Y-%m-%d_%H-%M-%S')
                             filename = photo_url.split('.')[-1]
                             r = requests.get(photo_url)
                             if r.status_code == 200:
@@ -165,7 +165,7 @@ def get(accessToken = '', peerId = '', downloadPhotos = False, downloadVideos = 
                             video_url = video[list(video.keys())[-2]]
                             date = item['attachment']['video']['date']
                             value = datetime.fromtimestamp(date)
-                            str_date = value.strftime('%Y-%m-%d_%H:%M:%S')
+                            str_date = value.strftime('%Y-%m-%d_%H-%M-%S')
                             filename = video_url.split('.')[-1].split('?')[0]
                             r = requests.get(video_url)
                             if r.status_code == 200:
