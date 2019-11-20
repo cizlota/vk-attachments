@@ -87,6 +87,7 @@ def selectDirectory():
     folder.set(filename + '/')
 
 def get(accessToken = '', peerId = '', downloadPhotos = False, downloadVideos = False, userChat = False, membersOnly = False):
+    ID = 0
     api_version = '5.103'
     user_url = 'https://api.vk.com/method/users.get?v=%s&access_token=%s&user_ids=' % (api_version, accessToken)
     chat_url = 'https://api.vk.com/method/messages.getChat?v=%s&access_token=%s&chat_id=' % (api_version, accessToken)
@@ -98,6 +99,7 @@ def get(accessToken = '', peerId = '', downloadPhotos = False, downloadVideos = 
         status, response = send_request(user_url + peerId)
         if status == 200:
             download_folder = response['response'][0]['first_name'] + ' ' + response['response'][0]['last_name']
+            ID = response['response'][0]['id']
     else:
         status, response = send_request(chat_url + peerId)
         peerId = str(int(peerId) + 2000000000)
@@ -120,8 +122,7 @@ def get(accessToken = '', peerId = '', downloadPhotos = False, downloadVideos = 
                     items = data['items']
                     for item in items:
                         id = [item['from_id']]
-                        
-                        if (userChat and ((not membersOnly) or (id == peerId))) or (not userChat and ((not membersOnly) or (set(id) & set(member_list) != set()))):
+                        if (userChat and ((not membersOnly) or (set(id) & set([peerId, ID]) != set()))) or (not userChat and ((not membersOnly) or (set(id) & set(member_list) != set()))):
                             if i > 0:
                                 i = i - 1
                                 continue
@@ -155,7 +156,7 @@ def get(accessToken = '', peerId = '', downloadPhotos = False, downloadVideos = 
                     items = data['items']
                     for item in items:
                         id = [item['attachment']['video']['owner_id']]
-                        if (userChat and ((not membersOnly) or (id == peerId))) or (not userChat and ((not membersOnly) or (set(id) & set(member_list) != set()))):
+                        if (userChat and ((not membersOnly) or (set(id) & set([peerId, ID]) != set()))) or (not userChat and ((not membersOnly) or (set(id) & set(member_list) != set()))):
                             if i > 0:
                                 i = i - 1
                                 continue
